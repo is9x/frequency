@@ -1,100 +1,60 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            color: #007BFF;
-        }
-        #intro {
-            font-size: 1.1em;
-            color: #555;
-            margin-bottom: 20px;
-        }
-        #frequencySlider {
-            width: 80%;
-            margin-top: 10px;
-        }
-        button {
-            padding: 10px 15px;
-            margin: 10px;
-            font-size: 1em;
-            cursor: pointer;
-        }
-        #playButton {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        #stopButton {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frequency Generator</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .pattern-container {
+      display: flex;
+      flex-wrap: wrap;
+      width: 300px;
+      margin: 20px;
+    }
+    .box {
+      width: 30px;
+      height: 30px;
+      margin: 2px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <h1>Frequency Generator</h1>
-    <p id="intro">Frequency Prank! 14,000+ is unhearable for people over 50.</p>
+  <h1>Frequency Generator</h1>
+  <button onclick="generatePattern()">Generate Pattern</button>
+  <div class="pattern-container" id="pattern"></div>
 
-    <label for="frequencySlider">Frequency: <span id="frequencyDisplay">200</span> Hz</label>
-    <input type="range" id="frequencySlider" min="20" max="40000" value="200" step="1">
-    
-    <div>
-        <button id="playButton">Play</button>
-        <button id="stopButton">Stop</button>
-    </div>
+  <script>
+    function generatePattern() {
+      const patternContainer = document.getElementById('pattern');
+      patternContainer.innerHTML = ''; // Clear the current pattern
+      for (let i = 0; i < 100; i++) { // Generate 100 boxes
+        const box = document.createElement('div');
+        box.className = 'box';
+        box.style.backgroundColor = getRandomColor();
+        patternContainer.appendChild(box);
+      }
+    }
 
-    <script>
-        let audioContext;
-        let oscillator;
-        let isPlaying = false;
-
-        const frequencySlider = document.getElementById('frequencySlider');
-        const frequencyDisplay = document.getElementById('frequencyDisplay');
-        const playButton = document.getElementById('playButton');
-        const stopButton = document.getElementById('stopButton');
-
-        // Update frequency display as slider is moved
-        frequencySlider.oninput = function () {
-            frequencyDisplay.textContent = this.value;
-            if (oscillator && isPlaying) {
-                oscillator.frequency.value = this.value;
-            }
-        };
-
-        // Start tone when "Play" button is clicked
-        playButton.onclick = function () {
-            if (!isPlaying) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                oscillator = audioContext.createOscillator();
-                oscillator.type = 'sine';
-                oscillator.frequency.value = frequencySlider.value;
-                oscillator.connect(audioContext.destination);
-                oscillator.start();
-                isPlaying = true;
-            }
-        };
-
-        // Stop tone when "Stop" button is clicked
-        stopButton.onclick = function () {
-            if (isPlaying) {
-                oscillator.stop();
-                oscillator.disconnect();
-                audioContext.close();
-                isPlaying = false;
-            }
-        };
-    </script>
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
 </body>
 </html>
